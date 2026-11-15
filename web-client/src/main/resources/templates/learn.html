@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>学习面板 · Auth Lab</title><link rel="stylesheet" href="/style.css"></head>
+<body><main>
+<nav aria-label="语言"><a href="/learn?lang=zh_CN" lang="zh-CN">中文</a> · <a href="/learn?lang=ja" lang="ja">日本語</a></nav>
+<p class="eyebrow">已验证的服务端会话</p><h1>你好，<span th:text="${username}">Alice</span></h1>
+<p th:text="${refreshStatus}"></p><p>Access Token 到期时间：<strong th:text="${expiresAt}">—</strong>。<a href="/learn">重新检查 / 自动刷新</a></p>
+<div class="grid"><section><h2>ID Token → 客户端</h2><p>表示本次 OIDC 身份认证结果，aud 是 web-client，不能代替 API 凭据。</p><pre th:text="${idClaims}"></pre></section>
+<section><h2>Access Token → API</h2><p>aud 包含 resource-api；scope 决定允许的操作。JWT 是编码与签名，不是加密。</p><pre th:text="${accessClaims}"></pre></section></div>
+<section><h2>Refresh Token → 服务端</h2><p>仅保存在服务端内存，用于换取新的 Access Token。不会写入浏览器 localStorage，重启应用后需重新登录。</p></section>
+<section><h2>发起 API 实验</h2><p>请求从网页服务器发出，只携带 Access Token。Alice 读取订单 2 返回 403；Admin 可读取全部订单。用户令牌调用机器端点返回 403。</p>
+<form th:action="@{/call}" method="post" class="actions">
+<button name="action" value="me">我的身份</button><button name="action" value="orders">订单列表</button><button name="action" value="own">订单 1</button><button name="action" value="other">订单 2</button><button name="action" value="create">创建订单</button><button name="action" value="admin">ADMIN 端点</button><button name="action" value="machine">机器专属端点</button>
+</form></section>
+<section><h2>观察协议</h2><p>授权请求：response_type=code、state、code_challenge、code_challenge_method=S256。</p><p>换码请求：服务端 POST 表单，包含 code 与 code_verifier；不要将真实值写入日志或截图。</p><p>401 表示凭据无效或缺失；403 表示已通过认证，但授权不足。身份主键使用 iss + sub。</p></section>
+<form id="logout-form" th:action="@{/logout}" method="post"><button>注销本地会话与 Keycloak 登录</button></form>
+<p class="muted">注销不使已签发 JWT 立即失效；实验中 Access Token 生命周期为 120 秒。</p>
+</main></body></html>

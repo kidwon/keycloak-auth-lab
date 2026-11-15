@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>学習パネル · Auth Lab</title><link rel="stylesheet" href="/style.css"></head>
+<body><main>
+<nav aria-label="言語"><a href="/learn?lang=zh_CN" lang="zh-CN">中文</a> · <a href="/learn?lang=ja" lang="ja">日本語</a></nav>
+<p class="eyebrow">認証済みのサーバーセッション</p><h1>こんにちは、<span th:text="${username}">Alice</span>さん</h1>
+<p th:text="${refreshStatus}"></p><p>Access Token の有効期限：<strong th:text="${expiresAt}">—</strong>。<a href="/learn">再確認 / 自動更新</a></p>
+<div class="grid"><section><h2>ID Token → クライアント</h2><p>OIDC 認証の結果を表します。aud は web-client で、API 用の認証情報としては使用できません。</p><pre th:text="${idClaims}"></pre></section>
+<section><h2>Access Token → API</h2><p>aud に resource-api が含まれ、scope が許可された操作を表します。JWT は符号化・署名されますが、暗号化されているとは限りません。</p><pre th:text="${accessClaims}"></pre></section></div>
+<section><h2>Refresh Token → サーバー</h2><p>サーバーのメモリーにのみ保存し、新しい Access Token の取得に使用します。ブラウザーの localStorage には保存しません。アプリを再起動した場合は再ログインが必要です。</p></section>
+<section><h2>API の認可を試す</h2><p>Web サーバーが Access Token のみを付けてリクエストします。Alice が注文2を読むと403、Admin は全注文を読めます。ユーザートークンでマシン専用エンドポイントを呼ぶと403になります。</p>
+<form th:action="@{/call}" method="post" class="actions">
+<button name="action" value="me">自分の認証情報</button><button name="action" value="orders">注文一覧</button><button name="action" value="own">注文1</button><button name="action" value="other">注文2</button><button name="action" value="create">注文を作成</button><button name="action" value="admin">ADMIN エンドポイント</button><button name="action" value="machine">マシン専用エンドポイント</button>
+</form></section>
+<section><h2>プロトコルを観察する</h2><p>認可リクエスト：response_type=code、state、code_challenge、code_challenge_method=S256。</p><p>トークン交換：サーバーからの POST フォームに code と code_verifier を含めます。実際の値をログやスクリーンショットに残さないでください。</p><p>401は認証情報の欠如・無効、403は認証後の権限不足を表します。主体の識別には iss + sub を使用します。</p></section>
+<form id="logout-form" th:action="@{/logout}" method="post"><button>ローカルセッションと Keycloak からログアウト</button></form>
+<p class="muted">ログアウトしても発行済み JWT は直ちに無効にはなりません。この実験の Access Token の有効期間は120秒です。</p>
+</main></body></html>

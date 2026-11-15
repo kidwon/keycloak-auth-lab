@@ -1,0 +1,2 @@
+rootProject.name = 'keycloak-auth-lab'
+include 'resource-api', 'web-client', 'service-client'

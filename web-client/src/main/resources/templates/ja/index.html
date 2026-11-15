@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Keycloak Auth Lab</title><link rel="stylesheet" href="/style.css"></head>
+<body><main>
+<nav aria-label="言語"><a href="/?lang=zh_CN" lang="zh-CN">中文</a> · <a href="/?lang=ja" lang="ja">日本語</a></nav>
+<p class="eyebrow">OAuth 2.0 · OIDC · Spring Security</p><h1>ログインの仕組みを、一つずつ確かめる。</h1>
+<p>認可コード、PKCE、トークン検証、アクセス判定をローカルで観察します。すべての実験にデモ用のアカウントを使用します。</p>
+<p th:if="${param.loginError}" role="alert">ログインに失敗しました。認可リクエストの期限切れ、または state・トークンの検証失敗が考えられます。もう一度ログインを開始してください。</p>
+<a class="button" href="/oauth2/authorization/keycloak">Keycloak でログイン</a>
+<a class="button secondary" href="/learn">学習パネルを開く</a>
+<section><h2>リクエストの流れ</h2><ol><li>ブラウザーが state と S256 challenge を付けて Keycloak にアクセスします。</li><li>サーバーが認可コードと verifier をトークンに交換します。</li><li>Web クライアントが Access Token を使って API を呼び出します。</li><li>API が署名、issuer、時刻、audience を検証し、scope、ロール、所有権を確認します。</li></ol></section>
+<p class="muted">ローカル学習専用のプロジェクトです。ログイン後は許可された claims のみ表示し、再利用可能な認証情報は表示しません。</p>
+</main></body></html>

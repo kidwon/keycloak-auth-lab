@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: service-client
+  main:
+    web-application-type: none
+lab:
+  token-uri: ${TOKEN_URI:http://localhost:8081/realms/auth-lab/protocol/openid-connect/token}
+  api-base-url: ${API_BASE_URL:http://localhost:8082}
+  client-secret: ${SERVICE_CLIENT_SECRET}

@@ -1,0 +1,29 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 30m
+      cookie:
+        name: AUTH_LAB_SESSION
+        http-only: true
+        same-site: lax
+  error:
+    include-message: never
+    include-stacktrace: never
+spring:
+  application:
+    name: web-client
+lab:
+  issuer: ${ISSUER_URI:http://localhost:8081/realms/auth-lab}
+  backchannel: ${KEYCLOAK_BACKCHANNEL:http://localhost:8081/realms/auth-lab}
+  web-origin: ${WEB_ORIGIN:http://localhost:8080}
+  api-base-url: ${API_BASE_URL:http://localhost:8082}
+  client-secret: ${WEB_CLIENT_SECRET}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

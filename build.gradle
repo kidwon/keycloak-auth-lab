@@ -1,0 +1,29 @@
+plugins {
+    id 'org.springframework.boot' version '3.5.16' apply false
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    group = 'lab.auth'
+    version = '0.1.0-SNAPSHOT'
+    repositories { mavenCentral() }
+    java {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+    tasks.withType(JavaCompile).configureEach {
+        options.release = 21
+        options.encoding = 'UTF-8'
+        options.compilerArgs += ['-parameters']
+    }
+    dependencies {
+        implementation platform('org.springframework.boot:spring-boot-dependencies:3.5.16')
+        testImplementation platform('org.springframework.boot:spring-boot-dependencies:3.5.16')
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
+    tasks.withType(Test).configureEach { useJUnitPlatform() }
+    tasks.named('bootJar') { archiveFileName = 'app.jar' }
+    tasks.named('jar') { enabled = false }
+}

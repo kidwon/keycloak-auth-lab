@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Keycloak Auth Lab</title><link rel="stylesheet" href="/style.css"></head>
+<body><main>
+<nav aria-label="语言"><a href="/?lang=zh_CN" lang="zh-CN">中文</a> · <a href="/?lang=ja" lang="ja">日本語</a></nav>
+<p class="eyebrow">OAuth 2.0 · OIDC · Spring Security</p><h1>把一次登录，拆开看清楚。</h1>
+<p>在本地观察授权码、PKCE、令牌校验与访问决策。所有实验使用演示身份。</p>
+<p th:if="${param.loginError}" role="alert">登录失败：授权请求可能已过期，或 state/令牌验证未通过。请重新发起登录。</p>
+<a class="button" href="/oauth2/authorization/keycloak">使用 Keycloak 登录</a>
+<a class="button secondary" href="/learn">进入学习面板</a>
+<section><h2>一次请求的旅程</h2><ol><li>浏览器携带 state 与 S256 challenge 前往 Keycloak。</li><li>服务端使用授权码和 verifier 换取令牌。</li><li>网页客户端用 Access Token 调用 API。</li><li>API 验证签名、issuer、时间、audience，再判断 scope、角色和归属。</li></ol></section>
+<p class="muted">本项目仅用于本地学习。登录后展示安全 claims，不展示可复用凭据。</p>
+</main></body></html>

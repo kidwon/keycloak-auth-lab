@@ -1,0 +1,19 @@
+server:
+  port: 8082
+  error:
+    include-message: never
+    include-stacktrace: never
+spring:
+  application:
+    name: resource-api
+lab:
+  issuer: ${ISSUER_URI:http://localhost:8081/realms/auth-lab}
+  jwk-set-uri: ${JWK_SET_URI:http://localhost:8081/realms/auth-lab/protocol/openid-connect/certs}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
